@@ -7,31 +7,23 @@ on:
     branches: [main]
 
 jobs:
-  build_test_publish:
-    name: Build and publish
+  build_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          persist-credentials: false
 
-      - name: Set environment variables
-        run: |
-          GH_COMMIT_MESSAGE="$(head -n 1 <<< "${{github.event.head_commit.message}}")"
-          GIT_COMMIT_MESSAGE="$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)"
-          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
-          echo "PR_TITLE=\"${{github.event.pull_request.title}}\"" >> $GITHUB_ENV
-          cat "${GITHUB_ENV}"
-
-      - name: Publish on GitHub Pages
-        if: |
-          env.BRANCH_NAME == 'main' &&
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[skip ci]') &&
-          !startsWith(env.COMMIT_MESSAGE || env.PR_TITLE, '"chore')
+      - name: Install and Build
         run: |
           yarn
           yarn build
-          yarn pages
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist
+          CLEAN: true
