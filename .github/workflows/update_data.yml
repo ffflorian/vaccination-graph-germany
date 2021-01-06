@@ -1,4 +1,4 @@
-name: 'Update data'
+name: Update data
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     - cron: '0 18 * * *'
 
 jobs:
-  download_data:
-    name: Download data
+  download_push:
+    name: Download and push data
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -16,6 +16,10 @@ jobs:
         with:
           fetch-depth: 2
           persist-credentials: false
+
+      - name: Download data
+        run: |
+          curl -L -o src/data.json "https://interactive.zeit.de/cronjobs/2020/corona/impfzahlen.json"
 
       - name: Push data to GitHub
         env:
@@ -30,7 +34,6 @@ jobs:
           REPO_URL="$(git remote get-url origin | sed -n "s/https:\/\/github.com\//https:\/\/${GIT_AUTHOR_NAME}:${GITHUB_TOKEN}@github.com\//p")"
           git remote set-url origin "${REPO_URL}"
           git checkout main
-          ./update.sh
           git add src/data.json
-          git commit -m "chore: Update data"
+          git commit -m "chore: Update data" || exit
           git push
