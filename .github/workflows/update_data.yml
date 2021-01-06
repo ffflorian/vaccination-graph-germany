@@ -1,8 +1,10 @@
 name: 'Update data'
 
 on:
+  push:
+    branches: [main]
   schedule:
-    - cron: '0 21 * * 2'
+    - cron: '0 18 * * *'
 
 jobs:
   download_data:
@@ -13,6 +15,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
+          persist-credentials: false
 
       - name: Push data to GitHub
         env:
