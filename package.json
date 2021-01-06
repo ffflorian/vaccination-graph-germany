@@ -16,7 +16,7 @@
   "prettier": "@ffflorian/prettier-config",
   "repository": "https://github.com/ffflorian/vaccination-graph-germany.git",
   "scripts": {
-    "build": "parcel build src/index.html && npx touch dist/.nojekyll",
+    "build": "parcel build --public-url \".\" src/index.html && npx touch dist/.nojekyll",
     "pages": "gh-pages -d dist -m \"chore: Rebuild page\" ",
     "start": "parcel serve src/index.html"
   },
