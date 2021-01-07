@@ -1,15 +1,13 @@
 import {GoogleCharts} from 'google-charts';
-import * as data from './data.json';
+import {germany as vaccinationData, lastUpdate} from './data.json';
 
-const vaccinations = data.germany.historical.map(entry => [new Date(entry.date), entry.value]).reverse();
-
-GoogleCharts.load(drawChart, {packages: ['line']});
+const vaccinations = vaccinationData.historical.map(entry => [new Date(entry.date), entry.value]).reverse();
+const lastUpdateDate = new Date(lastUpdate)
 
 function drawChart() {
   const data = new GoogleCharts.api.visualization.DataTable();
   data.addColumn('date', 'Date');
   data.addColumn('number', 'People vaccinated');
-
   data.addRows(vaccinations);
 
   const options = {
@@ -30,3 +28,8 @@ function drawChart() {
 
   chart.draw(data, GoogleCharts.api.charts.Line.convertOptions(options));
 }
+
+GoogleCharts.load(drawChart, {packages: ['line']});
+
+const updatedElement = document.getElementById('updated')
+updatedElement.innerHTML = `Updated on ${lastUpdateDate.toLocaleDateString()}, ${lastUpdateDate.toLocaleTimeString()}`
