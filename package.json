@@ -18,7 +18,7 @@
   "scripts": {
     "build": "parcel build --public-url \".\" src/index.html && npx touch dist/.nojekyll",
     "pages": "gh-pages -d dist -m \"chore: Rebuild page\" ",
-    "start": "parcel serve src/index.html"
+    "start": "parcel serve --no-cache --open - src/index.html"
   },
   "version": "1.0.0"
 }
