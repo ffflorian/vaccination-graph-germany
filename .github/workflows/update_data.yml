@@ -35,5 +35,5 @@ jobs:
           git remote set-url origin "${REPO_URL}"
           git checkout main
           git add src/data.json
-          git commit -m "chore: Update data" || exit
+          git diff-index --quiet HEAD || git commit -m "chore: Update data"
           git push
