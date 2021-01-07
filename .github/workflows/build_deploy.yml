@@ -3,8 +3,8 @@ name: Build and deploy
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  repository_dispatch:
+    types: [data_downloaded]
 
 jobs:
   build_deploy:
