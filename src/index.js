@@ -2,7 +2,7 @@ import {GoogleCharts} from 'google-charts';
 import {germany as vaccinationData, lastUpdate} from './data.json';
 
 const vaccinations = vaccinationData.historical.map(entry => [new Date(entry.date), entry.value]).reverse();
-const lastUpdateDate = new Date(lastUpdate)
+const lastUpdateDate = new Date(lastUpdate);
 
 function drawChart() {
   const data = new GoogleCharts.api.visualization.DataTable();
@@ -31,5 +31,5 @@ function drawChart() {
 
 GoogleCharts.load(drawChart, {packages: ['line']});
 
-const updatedElement = document.getElementById('updated')
-updatedElement.innerHTML = `Updated on ${lastUpdateDate.toLocaleDateString()}, ${lastUpdateDate.toLocaleTimeString()}`
+const updatedElement = document.getElementById('updated');
+updatedElement.innerHTML = `Updated on ${lastUpdateDate.toLocaleDateString()}, ${lastUpdateDate.toLocaleTimeString()}`;
