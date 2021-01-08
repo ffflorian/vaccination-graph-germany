@@ -1,8 +1,6 @@
 name: Update data
 
 on:
-  push:
-    branches: [main]
   schedule:
     - cron: '0 18 * * *'
 
@@ -42,4 +40,4 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{secrets.REPO_ACCESS_TOKEN}}
-          event-type: data_downloaded
+          event-type: trigger_build
