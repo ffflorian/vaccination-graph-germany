@@ -16,19 +16,32 @@
         transform: translate(-50%, -50%);
       }
 
+      #title {
+        font-size: 13pt;
+        font-weight: bolder;
+      }
+
+      #title,
       #source,
       #source a,
       #source a:visited,
       #updated {
         color: rgb(143, 143, 143);
+      }
+
+      #updated {
         text-align: right;
+      }
+
+      #source {
+        float: left;
       }
     </style>
     <script src="./index.js" defer></script>
   </head>
   <body>
-    <div id="graph"></div>
-    <div id="updated"></div>
+    <div id="title">COVID-19 Vaccination Graph for Germany</div>
+    <div id="chart"></div>
     <div id="source">
       Source:
       <a
@@ -36,5 +49,6 @@
         >ZEIT Online</a
       >
     </div>
+    <div id="updated"></div>
   </body>
 </html>
