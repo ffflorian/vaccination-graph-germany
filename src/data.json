@@ -2,68 +2,72 @@
   "germany": {
     "historical": [
       {
+        "date": "2021-01-12",
+        "value": 758093
+      },
+      {
         "date": "2021-01-11",
-        "value": 688782
+        "value": 688915
       },
       {
         "date": "2021-01-10",
-        "value": 627924
+        "value": 626044
       },
       {
         "date": "2021-01-09",
-        "value": 593140
+        "value": 593975
       },
       {
         "date": "2021-01-08",
-        "value": 540830
+        "value": 541307
       },
       {
         "date": "2021-01-07",
-        "value": 485152
+        "value": 485156
       },
       {
         "date": "2021-01-06",
-        "value": 429316
+        "value": 429686
       },
       {
         "date": "2021-01-05",
-        "value": 375085
+        "value": 375298
       },
       {
         "date": "2021-01-04",
-        "value": 325742
+        "value": 325931
       },
       {
         "date": "2021-01-03",
-        "value": 278179
+        "value": 278348
       },
       {
         "date": "2021-01-02",
-        "value": 253943
+        "value": 254112
       },
       {
         "date": "2021-01-01",
-        "value": 209484
+        "value": 209653
       },
       {
         "date": "2020-12-31",
-        "value": 179184
+        "value": 179352
       },
       {
         "date": "2020-12-30",
-        "value": 141651
+        "value": 141819
       },
       {
         "date": "2020-12-29",
-        "value": 84949
+        "value": 85024
       },
       {
         "date": "2020-12-28",
-        "value": 42681
+        "value": 42756
       },
       {
         "date": "2020-12-27",
-        "value": 23621
+        "value": 23672
       }
     ]
   },
@@ -71,6 +75,10 @@
     {
       "id": "Baden-Württemberg",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 76762
+        },
         {
           "date": "2021-01-11",
           "value": 73776
@@ -141,6 +149,10 @@
       "id": "Bayern",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 150511
+        },
+        {
           "date": "2021-01-11",
           "value": 135986
         },
@@ -209,6 +221,10 @@
     {
       "id": "Berlin",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 35893
+        },
         {
           "date": "2021-01-11",
           "value": 33798
@@ -279,6 +295,10 @@
       "id": "Brandenburg",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 19590
+        },
+        {
           "date": "2021-01-11",
           "value": 15091
         },
@@ -347,6 +367,10 @@
     {
       "id": "Bremen",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 7753
+        },
         {
           "date": "2021-01-11",
           "value": 6999
@@ -417,6 +441,10 @@
       "id": "Hamburg",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 15980
+        },
+        {
           "date": "2021-01-11",
           "value": 14273
         },
@@ -485,6 +513,10 @@
     {
       "id": "Hessen",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 60344
+        },
         {
           "date": "2021-01-11",
           "value": 57475
@@ -555,6 +587,10 @@
       "id": "Mecklenburg-Vorpommern",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 29100
+        },
+        {
           "date": "2021-01-11",
           "value": 26926
         },
@@ -623,6 +659,10 @@
     {
       "id": "Niedersachsen",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 63200
+        },
         {
           "date": "2021-01-11",
           "value": 54168
@@ -693,6 +733,10 @@
       "id": "Nordrhein-Westfalen",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 129472
+        },
+        {
           "date": "2021-01-11",
           "value": 124637
         },
@@ -761,6 +805,10 @@
     {
       "id": "Rheinland-Pfalz",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 45326
+        },
         {
           "date": "2021-01-11",
           "value": 36466
@@ -831,6 +879,10 @@
       "id": "Saarland",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 11199
+        },
+        {
           "date": "2021-01-11",
           "value": 10130
         },
@@ -899,6 +951,10 @@
     {
       "id": "Sachsen",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 29421
+        },
         {
           "date": "2021-01-11",
           "value": 23701
@@ -969,6 +1025,10 @@
       "id": "Sachsen-Anhalt",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 27320
+        },
+        {
           "date": "2021-01-11",
           "value": 24413
         },
@@ -1037,6 +1097,10 @@
     {
       "id": "Schleswig-Holstein",
       "historical": [
+        {
+          "date": "2021-01-12",
+          "value": 43162
+        },
         {
           "date": "2021-01-11",
           "value": 38426
@@ -1107,6 +1171,10 @@
       "id": "Thüringen",
       "historical": [
         {
+          "date": "2021-01-12",
+          "value": 13060
+        },
+        {
           "date": "2021-01-11",
           "value": 12517
         },
@@ -1173,7 +1241,7 @@
       ]
     }
   ],
-  "timestamp": "12.1.2021, 11:00 Uhr",
+  "timestamp": "13.1.2021, 11:00 Uhr",
   "messages": [],
-  "lastUpdate": "2021-01-12T13:12:22+01:00"
+  "lastUpdate": "2021-01-13T13:32:24+01:00"
 }
