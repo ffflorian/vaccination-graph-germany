@@ -25,4 +25,4 @@ Google.charts.load('current', {packages: ['corechart']});
 Google.charts.setOnLoadCallback(drawChart);
 
 const updatedElement = document.getElementById('updated');
-updatedElement.innerHTML = `Updated on ${lastUpdateDate.toLocaleDateString()}, ${lastUpdateDate.toLocaleTimeString()}`;
+updatedElement.innerHTML += ` ${lastUpdateDate.toLocaleDateString()}, ${lastUpdateDate.toLocaleTimeString()}`;
