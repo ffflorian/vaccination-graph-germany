@@ -17,7 +17,7 @@ jobs:
 
       - name: Download data
         run: |
-          curl -L --compressed -o src/data.json "https://interactive.zeit.de/cronjobs/2020/corona/impfzahlen.json"
+          curl -L --compressed -o src/data.json "https://interactive.zeit.de/cronjobs/2020/corona/impfzahlenAutomatisch.json"
 
       - name: Push data to GitHub
         env:
