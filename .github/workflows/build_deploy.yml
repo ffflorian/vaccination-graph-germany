@@ -1,14 +1,64 @@
-name: Build and deploy
+name: CI
 
 on:
   push:
     branches: [main]
-  repository_dispatch:
-    types: [trigger_build]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 13 * * *'
 
 jobs:
-  build_deploy:
-    name: Build and deploy
+  download_push:
+    name: Download and push source data
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Set environment variables
+        run: |
+          GH_COMMIT_MESSAGE="$(head -n 1 <<< "${{github.event.head_commit.message}}")"
+          GIT_COMMIT_MESSAGE="$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)"
+          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
+          cat "${GITHUB_ENV}"
+          echo -e "github: ${{toJson(github)}}"
+
+      - name: Download data
+        if: |
+          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
+          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+        run: bin/update.sh
+
+      - name: Push data to GitHub
+        if: |
+          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
+          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+        env:
+          GIT_AUTHOR_NAME: ffflorian
+          GIT_AUTHOR_EMAIL: ffflorian@users.noreply.github.com
+          GIT_COMMITTER_NAME: ffflorian
+          GIT_COMMITTER_EMAIL: ffflorian@users.noreply.github.com
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          git config --global "user.email" "${GIT_AUTHOR_EMAIL}"
+          git config --global "user.name" "${GIT_AUTHOR_NAME}"
+          REPO_URL="$(git remote get-url origin | sed -n "s/https:\/\/github.com\//https:\/\/${GIT_AUTHOR_NAME}:${GITHUB_TOKEN}@github.com\//p")"
+          git remote set-url origin "${REPO_URL}"
+          git checkout main
+          git add src/data.json
+          git diff-index --quiet HEAD || git commit -m "chore: Update data"
+          git push
+
+  build:
+    name: Build
+    if: always()
+    needs: download_push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -25,6 +75,10 @@ jobs:
           echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
           echo "PR_TITLE=\"${{github.event.pull_request.title}}\"" >> $GITHUB_ENV
           cat "${GITHUB_ENV}"
+          echo -e "github: ${{toJson(github)}}"
+
+      - name: Yarn cache
+        uses: c-hive/gha-yarn-cache@v1
 
       - name: Install and build
         if: |
@@ -34,13 +88,61 @@ jobs:
           yarn
           yarn build
 
-      - name: Deploy to GitHub Pages
+      - name: Upload build artifacts
         if: |
           !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[skip ci]')
+          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[skip ci]') &&
+          github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Set environment variables
+        run: |
+          GH_COMMIT_MESSAGE="$(head -n 1 <<< "${{github.event.head_commit.message}}")"
+          GIT_COMMIT_MESSAGE="$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)"
+          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
+          cat "${GITHUB_ENV}"
+          echo -e "github: ${{toJson(github)}}"
+
+      - name: Download build artifacts
+        if: |
+          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
+          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        if: |
+          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
+          !contains(env.COMMIT_MESSAGE, '[skip ci]')
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
           CLEAN: true
+
+      - name: Delete build artifacts
+        if: |
+          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
+          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: dist
