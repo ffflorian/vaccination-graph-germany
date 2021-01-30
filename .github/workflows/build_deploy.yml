@@ -26,6 +26,9 @@ jobs:
           GIT_COMMIT_MESSAGE="$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)"
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
+
+      - name: Print environment variables
+        run: |
           cat "${GITHUB_ENV}"
           echo -e "github: ${{toJson(github)}}"
 
@@ -74,6 +77,9 @@ jobs:
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
           echo "PR_TITLE=\"${{github.event.pull_request.title}}\"" >> $GITHUB_ENV
+
+      - name: Print environment variables
+        run: |
           cat "${GITHUB_ENV}"
           echo -e "github: ${{toJson(github)}}"
 
@@ -116,6 +122,9 @@ jobs:
           GIT_COMMIT_MESSAGE="$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)"
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
+
+      - name: Print environment variables
+        run: |
           cat "${GITHUB_ENV}"
           echo -e "github: ${{toJson(github)}}"
 
