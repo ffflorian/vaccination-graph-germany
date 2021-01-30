@@ -11,7 +11,7 @@ on:
 jobs:
   download_push:
     name: Download and push data
-    if: github.event_name != 'pull_request' ||
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
