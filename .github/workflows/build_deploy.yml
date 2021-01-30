@@ -1,4 +1,4 @@
-name: Build and deploy
+name: CI
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   download_push:
-    name: Download and push data
+    name: Download and push source data
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +27,7 @@ jobs:
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
           cat "${GITHUB_ENV}"
+          echo ${{toJson(github)}}
 
       - name: Download data
         if: |
@@ -72,6 +73,7 @@ jobs:
           echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
           echo "PR_TITLE=\"${{github.event.pull_request.title}}\"" >> $GITHUB_ENV
           cat "${GITHUB_ENV}"
+          echo ${{toJson(github)}}
 
       - name: Install and build
         if: |
@@ -109,6 +111,7 @@ jobs:
           echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
           cat "${GITHUB_ENV}"
+          echo ${{toJson(github)}}
 
       - name: Download build artifacts
         if: |
