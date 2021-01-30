@@ -3,10 +3,43 @@ name: Build and deploy
 on:
   push:
     branches: [main]
-  repository_dispatch:
-    types: [trigger_build]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 13 * * *'
 
 jobs:
+  download_push:
+    name: Download and push data
+    if: github.event_name != 'pull_request' ||
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Download data
+        run: bin/update.sh
+
+      - name: Push data to GitHub
+        env:
+          GIT_AUTHOR_NAME: ffflorian
+          GIT_AUTHOR_EMAIL: ffflorian@users.noreply.github.com
+          GIT_COMMITTER_NAME: ffflorian
+          GIT_COMMITTER_EMAIL: ffflorian@users.noreply.github.com
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          git config --global "user.email" "${GIT_AUTHOR_EMAIL}"
+          git config --global "user.name" "${GIT_AUTHOR_NAME}"
+          REPO_URL="$(git remote get-url origin | sed -n "s/https:\/\/github.com\//https:\/\/${GIT_AUTHOR_NAME}:${GITHUB_TOKEN}@github.com\//p")"
+          git remote set-url origin "${REPO_URL}"
+          git checkout main
+          git add src/data.json
+          git diff-index --quiet HEAD || git commit -m "chore: Update data"
+          git push
+
   build_deploy:
     name: Build and deploy
     runs-on: ubuntu-latest
