@@ -57,7 +57,7 @@ jobs:
 
   build:
     name: Build
-    if: always() && (needs.download_push.outputs.job_status == 'success')
+    if: always()
     needs: download_push
     runs-on: ubuntu-latest
     steps:
