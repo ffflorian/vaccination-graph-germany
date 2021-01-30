@@ -11,7 +11,6 @@ on:
 jobs:
   download_push:
     name: Download and push source data
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -32,13 +31,15 @@ jobs:
       - name: Download data
         if: |
           !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+          !contains(env.COMMIT_MESSAGE, '[skip ci]') &&
+          github.event_name != 'pull_request'
         run: bin/update.sh
 
       - name: Push data to GitHub
         if: |
           !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+          !contains(env.COMMIT_MESSAGE, '[skip ci]') &&
+          github.event_name != 'pull_request'
         env:
           GIT_AUTHOR_NAME: ffflorian
           GIT_AUTHOR_EMAIL: ffflorian@users.noreply.github.com
