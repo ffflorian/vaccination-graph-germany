@@ -84,7 +84,8 @@ jobs:
       - name: Upload build artifacts
         if: |
           !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[skip ci]')
+          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[skip ci]') &&
+          github.event_name != 'pull_request'
         uses: actions/upload-artifact@v2
         with:
           name: dist
