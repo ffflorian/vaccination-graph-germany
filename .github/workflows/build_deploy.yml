@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on:
   push:
@@ -16,44 +16,47 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           persist-credentials: false
 
-      - name: Set environment variables
-        run: |
-          GH_COMMIT_MESSAGE="$(head -n 1 <<< "${{github.event.head_commit.message}}")"
-          GIT_COMMIT_MESSAGE="$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)"
-          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
-          echo "PR_TITLE=\"${{github.event.pull_request.title}}\"" >> $GITHUB_ENV
+      - name: Skip CI check
+        uses: mstachniuk/ci-skip@v1
 
-      - name: Print environment variables
-        run: |
-          cat "${GITHUB_ENV}"
-          echo -e "github: ${{toJson(github)}}"
+      - name: Set up Node.js
+        if: env.CI_SKIP == 'false'
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
 
-      - name: Yarn cache
-        uses: c-hive/gha-yarn-cache@v1
+      - name: Set yarn cache directory
+        if: env.CI_SKIP == 'false'
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Get yarn cache
+        uses: actions/cache@v2
+        if: env.CI_SKIP == 'false'
+        id: yarn-cache
+        with:
+          path: ${{steps.yarn-cache-dir-path.outputs.dir}}
+          key: ${{runner.os}}-yarn-${{hashFiles('**/yarn.lock')}}
+          restore-keys: ${{runner.os}}-yarn-
 
       - name: Download source data
         if: |
-          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE, '[skip ci]') &&
+          env.CI_SKIP == 'false' &&
           github.event_name != 'pull_request'
         run: bin/update.sh
 
       - name: Install and build
-        if: |
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[skip ci]')
+        if: env.CI_SKIP == 'false'
         run: |
           yarn
           yarn build
 
       - name: Upload build artifacts
         if: |
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE || env.PR_TITLE, '[skip ci]') &&
+          env.CI_SKIP == 'false' &&
           github.event_name != 'pull_request'
         uses: actions/upload-artifact@v2
         with:
@@ -62,8 +65,7 @@ jobs:
 
       - name: Push source data to GitHub
         if: |
-          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE, '[skip ci]') &&
+          env.CI_SKIP == 'false' &&
           github.event_name != 'pull_request'
         env:
           GIT_AUTHOR_NAME: ffflorian
@@ -90,34 +92,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           persist-credentials: false
 
-      - name: Set environment variables
-        run: |
-          GH_COMMIT_MESSAGE="$(head -n 1 <<< "${{github.event.head_commit.message}}")"
-          GIT_COMMIT_MESSAGE="$(git log --format=%B -n 1 ${{github.event.after}} | head -n 1)"
-          echo "BRANCH_NAME=$(git branch --show-current)" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=\"$(test "${GH_COMMIT_MESSAGE}" && echo "${GH_COMMIT_MESSAGE}" || echo "${GIT_COMMIT_MESSAGE}")\"" >> $GITHUB_ENV
-
-      - name: Print environment variables
-        run: |
-          cat "${GITHUB_ENV}"
-          echo -e "github: ${{toJson(github)}}"
+      - name: Skip CI check
+        uses: mstachniuk/ci-skip@v1
 
       - name: Download build artifacts
-        if: |
-          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+        if: env.CI_SKIP == 'false'
         uses: actions/download-artifact@v2
         with:
           name: dist
           path: dist
 
       - name: Deploy to GitHub Pages
-        if: |
-          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+        if: env.CI_SKIP == 'false'
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -126,9 +115,7 @@ jobs:
           CLEAN: true
 
       - name: Delete build artifacts
-        if: |
-          !contains(env.COMMIT_MESSAGE, '[ci skip]') &&
-          !contains(env.COMMIT_MESSAGE, '[skip ci]')
+        if: env.CI_SKIP == 'false'
         uses: geekyeggo/delete-artifact@v1
         with:
           name: dist
