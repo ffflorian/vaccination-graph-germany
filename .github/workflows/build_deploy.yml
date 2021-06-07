@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          persist-credentials: false
 
       - name: Skip CI check
         uses: mstachniuk/ci-skip@v1
@@ -91,9 +88,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          persist-credentials: false
 
       - name: Skip CI check
         uses: mstachniuk/ci-skip@v1
