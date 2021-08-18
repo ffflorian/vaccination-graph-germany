@@ -911,10 +911,10 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@types/google.visualization@0.0.67":
-  version "0.0.67"
-  resolved "https://registry.yarnpkg.com/@types/google.visualization/-/google.visualization-0.0.67.tgz#eb3f2e8987517b840fbefa212e2aec2e1f3de03c"
-  integrity sha512-UMZkVPX0p+jp7MDNDehTpXQfkwatPlgsJ0hV8yItE8n6E7XjUOl/HmAffGjHcMjt94/KSlNhfTYQcN6HQ1qiFw==
+"@types/google.visualization@0.0.68":
+  version "0.0.68"
+  resolved "https://registry.yarnpkg.com/@types/google.visualization/-/google.visualization-0.0.68.tgz#773e908c02e08dffe689844f0972dd481516e704"
+  integrity sha512-LkLniL1TYykhz+ZdRof3Bi8cp1OhqoK11Tj1RM2bPtGVBNexQ0eRnOrOWcWTdi80Sz9DzJ4JIG2rTlSJBVV58w==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
